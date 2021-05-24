@@ -2,6 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import { sqlQuery } from "../utils/functions.utill";
+import db from "../configs/db.config";
+import jwt from "jsonwebtoken";
+import environments from "../configs/environment.config";
 
 /**
  * Controller for user registration.
@@ -38,5 +41,24 @@ export const registerUser = async (
 };
 
 export const loginUser = (req: Request, res: Response, next: NextFunction) => {
-  res.send("You are logging in");
+  const { email, password } = req.body;
+  let query = `SELECT * FROM users WHERE email = '${email}'`;
+  db.query(query, async (err, result) => {
+    if (err) throw err;
+    const user = JSON.parse(JSON.stringify(result))[0];
+    if (await bcrypt.compare(password, user.password)) {
+      const token = jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+        },
+        environments.jwtAccessToken
+      );
+      res.status(200).json({
+        status: 200,
+        token,
+      });
+    }
+  });
 };

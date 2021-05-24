@@ -8,11 +8,11 @@ export const sqlQuery = (
   successJson: IJSONResponse = { message: "Request fulfiled", status: 200 },
   errorJson: IJSONResponseError = { message: "Client error", status: 400 }
 ) => {
-  db.query(query, (err, result) => {
+  return db.query(query, (err, result) => {
     if (err) {
-      return res.status(errorJson.status).json(errorJson);
+      res.status(errorJson.status).json(errorJson);
     } else {
-      return res.status(successJson.status).json(successJson);
+      res.status(successJson.status).json(successJson);
     }
   });
 };

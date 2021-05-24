@@ -3,7 +3,7 @@ import { ICors } from "../utils/interfaces.util";
 
 const defaultCorsOptions: ICors = {
   origins: "*",
-  allowedHeaders: "Vary",
+  allowedHeaders: "Content-Type, Authorization",
   methods: "GET, POST, PATCH, PUT, DELETE, OPTIONS",
 };
 

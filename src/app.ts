@@ -6,6 +6,7 @@ const app = express();
 const PORT = 5000 || process.env.PORT;
 
 app.use(corsMiddleware());
+// app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get("/", (req, res) => res.send("Nothing special here"));
