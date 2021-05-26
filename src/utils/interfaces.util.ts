@@ -14,3 +14,10 @@ export interface IJSONResponse {
 export interface IJSONResponseError extends IJSONResponse {
   error?: any;
 }
+
+export interface IUser {
+  id?: string;
+  name?: string;
+  username?: string;
+  email?: string;
+}

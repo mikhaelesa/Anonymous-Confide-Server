@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
-import { sqlQuery } from "../utils/functions.utill";
+import {
+  generateRefreshToken,
+  generateToken,
+  sqlQuery,
+} from "../utils/functions.utill";
 import db from "../configs/db.config";
 import jwt from "jsonwebtoken";
 import environments from "../configs/environment.config";
@@ -30,7 +34,11 @@ export const registerUser = async (
     const hashedPassword = await bcrypt.hash(password, 10);
     const id = uuidv4();
     const query = `INSERT INTO users (id, username, email, password) VALUES ('${id}', '${username}', '${email}', '${hashedPassword}')`;
-    sqlQuery(query, res);
+    sqlQuery(query);
+    return res.status(200).json({
+      status: 200,
+      message: "User created successfully",
+    });
   } catch (e) {
     // On server side error
     return res.status(500).json({
@@ -40,6 +48,14 @@ export const registerUser = async (
   }
 };
 
+/**
+ * Controller for user registration.
+ *
+ * @param req request
+ * @param res response
+ * @param next next function
+ * @returns Successful user creation
+ */
 export const loginUser = (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
   let query = `SELECT * FROM users WHERE email = '${email}'`;
@@ -47,18 +63,31 @@ export const loginUser = (req: Request, res: Response, next: NextFunction) => {
     if (err) throw err;
     const user = JSON.parse(JSON.stringify(result))[0];
     if (await bcrypt.compare(password, user.password)) {
-      const token = jwt.sign(
-        {
-          id: user.id,
-          email: user.email,
-          username: user.username,
-        },
-        environments.jwtAccessToken
-      );
+      const dataToSign = { id: user.id };
+      const token = generateToken(dataToSign);
+      const refreshToken = generateRefreshToken(dataToSign);
+      let query = `UPDATE users SET refresh_token = '${refreshToken}' WHERE id = '${user.id}'`;
+      sqlQuery(query);
       res.status(200).json({
         status: 200,
         token,
+        refreshToken,
       });
     }
+  });
+};
+
+export const logoutUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { token } = req.body;
+  const decoded: any = jwt.decode(token);
+  let query = `UPDATE users SET refresh_token = NULL WHERE id = '${decoded.id}'`;
+  sqlQuery(query);
+  return res.status(200).json({
+    status: 200,
+    message: "Logout success",
   });
 };
