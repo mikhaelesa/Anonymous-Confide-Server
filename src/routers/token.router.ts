@@ -1,7 +1,7 @@
-import express from "express";
+import { Router } from "express";
 import { renewAccessToken } from "../controllers/token.controller";
 
-const router = express.Router();
+const router = Router();
 
 router.post("/", renewAccessToken);
 

@@ -1,9 +1,9 @@
 import { setHeaderType } from "./types.utils";
 
 export interface ICors {
-  origins: setHeaderType;
-  methods: setHeaderType;
-  allowedHeaders: setHeaderType;
+  origins?: setHeaderType;
+  methods?: setHeaderType;
+  allowedHeaders?: setHeaderType;
 }
 
 export interface IJSONResponse {
@@ -20,4 +20,9 @@ export interface IUser {
   name?: string;
   username?: string;
   email?: string;
+}
+
+export interface IPromiseResult {
+  success: boolean;
+  data: any;
 }

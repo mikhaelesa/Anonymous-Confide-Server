@@ -9,9 +9,9 @@ const defaultCorsOptions: ICors = {
 
 export default (options: ICors = defaultCorsOptions) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    res.setHeader("Access-Control-Allow-Origin", options.origins);
-    res.setHeader("Access-Control-Allow-Methods", options.methods);
-    res.setHeader("Access-Control-Allow-Headers", options.allowedHeaders);
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", options.methods!);
+    res.setHeader("Access-Control-Allow-Headers", options.allowedHeaders!);
     next();
   };
 };
