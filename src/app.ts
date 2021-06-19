@@ -6,7 +6,7 @@ import tokenRouter from "./routers/token.router";
 import postRouter from "./routers/post.router";
 
 const app = express();
-const PORT = 5000 || process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 app.use(corsMiddleware());
 // app.use(express.urlencoded({ extended: true }));
