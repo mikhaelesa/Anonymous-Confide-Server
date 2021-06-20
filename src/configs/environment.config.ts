@@ -7,6 +7,7 @@ const environments = {
   dbHost: process.env.DATABASE_HOST ?? "",
   dbUser: process.env.DATABASE_USER ?? "",
   dbName: process.env.DATABASE_NAME ?? "",
+  dbPort: process.env.DATABASE_PORT ?? "",
   jwtAccessToken: process.env.JWT_ACCESS_TOKEN ?? "",
   jwtRefreshToken: process.env.JWT_REFRESH_TOKEN ?? "",
 };
